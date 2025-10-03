@@ -1,11 +1,15 @@
+"use client"
 import React from 'react'
 import { ChevronLeft, ChevronRight, Wifi, Tv, Star } from "lucide-react";
 import { Room } from '@/backend/models/room-model';
+import { useState } from 'react';
 
 
 export default function SelectedRoomInfo({room}:{room:Room}) {
 
-    
+    const [modal,setModal] = useState(false)
+
+
 
       const roomImages = [
     "https://api.builder.io/api/v1/image/assets/TEMP/8ccd5129669f5284f823a95550463369243d2667?width=1260",
@@ -63,7 +67,9 @@ export default function SelectedRoomInfo({room}:{room:Room}) {
             <p className="text-hotel-blue text-lg md:text-xl lg:text-[29px] font-normal leading-[1.4] mb-8 lg:mb-[53px]">
              {room.descripcion}
             </p>
-            <button className="w-full bg-primary border-0 max-w-[244px] h-16 lg:h-[76px] rounded-[15px] flex items-center justify-center text-white text-xl lg:text-[30px] font-medium hover:bg-hotel-orange/90 transition-colors">
+            <button 
+            onClick={()=>setModal(true)}
+            className="w-full bg-primary border-0 max-w-[244px] h-16 lg:h-[76px] rounded-[15px] flex items-center justify-center text-white text-xl lg:text-[30px] font-medium hover:bg-hotel-orange/90 transition-colors">
               Reservar
             </button>
           </div>
@@ -98,6 +104,36 @@ export default function SelectedRoomInfo({room}:{room:Room}) {
             </div>
           </div>
         </section>
+                {
+                  modal && (
+                    <div className='flex flex-col p-10 gap-4 text-center bg-white border-2 w-[600px] rounded-xl  z-10 absolute top-1/2 right-1/2 translate-x-1/2'>
+                      <h2 className='text-2xl font-bold text-primary'>Ticket de Reserva</h2>
+                      <div className='w-full '>
+                     <p>
+                        Númeor de reserva: <span className="font-bold">{`1232435${room.id}`}</span>
+                      </p>
+                      <p>
+                        Número de habitación: <span className="font-bold">{room.numero}</span>
+                      </p>
+                      <p>
+                        Descripción: <span className="font-bold">{room.descripcion}</span>
+                      </p>
+                      <p>
+                        Precio por noche: <span className="font-bold">{`$${room.precioDiario}`}</span>
+                      </p>
+                      </div>
+                        <div className='w-full flex justify-center items-center gap-4'>
+                        <button className='py-2 px-6 bg-primary text-white rounded-xl '
+                         onClick={()=>setModal(false)}
+                        >Cerrar</button>
+                        <button className='py-2 px-6 bg-primary text-white rounded-xl '
+                       
+                        >Descargar</button>
+                        </div>
+                    </div>
+                  )
+                }
+        
     </div>
   )
 }

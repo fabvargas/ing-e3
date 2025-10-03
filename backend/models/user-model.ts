@@ -1,27 +1,29 @@
+
+
 export interface User {
   id: number;
   name: string;
   email: string;
   password: string;
-  idioma: "ES" | "EN"; 
+  
 }
 
 
 export class JsonUserModel {
-    users =[
+    users:User[] =[
         {
          id:1,
          name:"Alice", 
          email:"alice@gmail.com", 
          password:"alice123",
-         idioma: "ES"
+       
         },
         {
           id:2,
          name:"Pepe", 
          email:"pepe@gmail.com", 
          password:"pepe123",
-         idioma: "EN"
+        
         },
        
     ]
@@ -35,8 +37,10 @@ export class JsonUserModel {
         return this.users.find(user => user.id ===id);
     }
 
-    async getUserByEmail(email:string){
-        return this.users.find(user => user.email === email);
+    async getUserByEmail(email:string): Promise<User | null>{
+        const userFound =  this.users.find(user => user.email === email);
+        if(!userFound) return null
+        return userFound
     }
 
     async addUser(user:User){
@@ -52,7 +56,7 @@ export class JsonUserModel {
             user.name = updatedInfo.name || user.name;
             user.email = updatedInfo.email || user.email;
             user.password = updatedInfo.password || user.password;
-            user.idioma = updatedInfo.idioma || user.idioma
+           
             return user;
         }
         return null;

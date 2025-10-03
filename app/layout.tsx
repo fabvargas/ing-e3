@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import Nav from "@/pages/component/home/Nav"
-import BookingForm from "@/pages/component/home/BookingForm"
-import Footer from "@/pages/component/home/Footer"
 
 import "./globals.css";
 
@@ -21,10 +18,8 @@ export default function RootLayout({
       <body
         className="antialiased"
       >
-            <Nav></Nav>
-              <BookingForm></BookingForm>
         {children}
-          <Footer></Footer>
+         
       </body>
     </html>
   );

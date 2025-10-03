@@ -17,10 +17,7 @@ export default function Hero() {
             Vive el Pacífico, siente el descanso.
           </p>
           
-          {/* CTA Button */}
-          <button className="bg-primary text-white font-ubuntu font-medium text-2xl px-16 py-6 rounded-xl hover:bg-opacity-90 transition-all duration-300">
-            INICIAR SESIÓN
-          </button>
+          
         </div>
 
          <HeroInfo></HeroInfo>
