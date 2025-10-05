@@ -302,7 +302,7 @@ export default function CartSummary({ room }: { room: Room }) {
 
                     <div className="flex-1" />
 
-                    <button className="px-4 py-2 bg-secondary text-white rounded" onClick={() => { setShowSuccess(false); setOpen(false); router.push('/') }}>Aceptar</button>
+                    <button className="px-4 py-2 bg-secondary text-white rounded" onClick={() => { setShowSuccess(false); setOpen(false); router.push('/home') }}>Aceptar</button>
                   </div>
                 </div>
               </div>

@@ -43,7 +43,7 @@ const availableRooms = await service.findAvailableRooms(
                   {`${room.tipo} ${room.categoria}`}
                 </h3>
                 <Link 
-                href={`/reservation/${room.id}`}
+                href={`/reservation/${room.id}?fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`}
                 className="w-full max-w-[244px] h-12 md:h-16 lg:h-[76px] bg-primary rounded-[15px] flex items-center justify-center text-white text-lg md:text-xl lg:text-2xl font-medium transition-colors">
                   Ver Detalles
                 </Link>

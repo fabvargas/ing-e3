@@ -12,7 +12,9 @@ export default function SelectedRoomInfo({room}:{room:Room}) {
 /* Función para calcular la diferencia en días entre dos fechas */
   const router = useRouter()
   const searchParams = useSearchParams()
+  console.log(searchParams , "search paramd from selected room")
   const fechaInicio = searchParams?.get('fechaInicio')
+  console.log(fechaInicio, "from slected room")
   const fechaTermino = searchParams?.get('fechaTermino')
     const [current, setCurrent] = useState(0)
 
