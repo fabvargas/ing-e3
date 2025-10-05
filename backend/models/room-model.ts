@@ -1,8 +1,7 @@
 export type Room = {
   id: number;
   numero: number;
-  categoria: "Single" | "Premium" | "Turista";
-  tipo: "Suit" | "Turista";
+  categoria: "Suit Premium" | "Turista Single" | "Turista Vista al Mar" | "Turista Doble";
   piso: number;
   precioDiario: number;
   descripcion: string;
@@ -13,8 +12,7 @@ export class JsonRoomModel {
     {
       id: 1,
       numero: 10,
-      categoria: "Single",
-      tipo: "Turista",
+      categoria: "Turista Single",
       piso: 1,
       precioDiario: 40_000,
       descripcion: "Habitación cómoda para una persona, con baño privado y WiFi.",
@@ -22,56 +20,50 @@ export class JsonRoomModel {
     {
       id: 2,
       numero: 22,
-      categoria: "Premium",
-      tipo: "Suit",
+      categoria: "Suit Premium",
       piso: 2,
-      precioDiario: 45_000,
+      precioDiario: 85_000,
       descripcion: "Suite Premium con sala de estar, minibar y vistas al jardín.",
     },
     {
       id: 3,
       numero: 28,
-      categoria: "Premium",
-      tipo: "Suit",
+      categoria: "Suit Premium",
       piso: 2,
-      precioDiario: 45_000,
+      precioDiario: 90_000,
       descripcion: "Suite elegante con balcón privado y decoración moderna.",
     },
     {
       id: 4,
       numero: 33,
-      categoria: "Single",
-      tipo: "Turista",
+      categoria: "Turista Vista al Mar",
       piso: 3,
-      precioDiario: 55_000,
-      descripcion: "Habitación individual confortable, ideal para viajes de negocios.",
+      precioDiario: 65_000,
+      descripcion: "Habitación con vista panorámica al mar, ideal para viajes de negocios.",
     },
     {
       id: 5,
       numero: 35,
-      categoria: "Single",
-      tipo: "Suit",
+      categoria: "Suit Premium",
       piso: 3,
-      precioDiario: 80_000,
+      precioDiario: 95_000,
       descripcion: "Suite individual espaciosa con zona de trabajo y vistas panorámicas.",
     },
     {
       id: 6,
       numero: 40,
-      categoria: "Single",
-      tipo: "Turista",
+      categoria: "Turista Doble",
       piso: 4,
-      precioDiario: 42_000,
-      descripcion: "Habitación sencilla y acogedora, con todas las comodidades básicas.",
+      precioDiario: 55_000,
+      descripcion: "Habitación doble acogedora, con todas las comodidades básicas.",
     },
     {
       id: 7,
       numero: 44,
-      categoria: "Premium",
-      tipo: "Suit",
+      categoria: "Turista Vista al Mar",
       piso: 4,
-      precioDiario: 85_000,
-      descripcion: "Suite Premium con decoración lujosa, sala de estar y baño privado.",
+      precioDiario: 70_000,
+      descripcion: "Habitación con vista al mar, decoración moderna y balcón privado.",
     },
   ];
 
@@ -79,17 +71,14 @@ export class JsonRoomModel {
     return this.rooms;
   }
 
-  async getRoomById(id: number): Promise<Room> {
+  async getRoomById(id: number): Promise<Room | null> {
     console.log(id, "----id")
     if (!id) {
-      throw new Error("error en validacion");
+      return null;
     }
     const room = this.rooms.find((room) => room.id == id);
 
-    if (!room) {
-      throw new Error("error en el servidor");
-    }
-    return room;
+    return room || null;
   }
 
   async addRoom(room: Room) {
@@ -106,7 +95,6 @@ export class JsonRoomModel {
     if (room) {
       room.numero = updatedInfo.numero ?? room.numero;
       room.categoria = updatedInfo.categoria ?? room.categoria;
-      room.tipo = updatedInfo.tipo ?? room.tipo;
       room.piso = updatedInfo.piso ?? room.piso;
       room.precioDiario = updatedInfo.precioDiario ?? room.precioDiario;
       room.descripcion = updatedInfo.descripcion ?? room.descripcion;

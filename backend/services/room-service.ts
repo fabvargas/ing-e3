@@ -13,7 +13,7 @@ export class RoomService {
 
   
   async findAvailableRooms(
-    categoria: "Single" | "Premium" | null,
+    categoria: "Suit Premium" | "Turista Single" | "Turista Vista al Mar" | "Turista Doble" | null,
     fechaInicio: Date,
     fechaTermino: Date
   ): Promise<Room[]> {

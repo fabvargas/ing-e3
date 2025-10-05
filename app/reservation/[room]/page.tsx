@@ -17,8 +17,17 @@ export default async function Page({ params }: { params: {room: string} }) {
 
   const model = new JsonRoomModel();
 
-
-   const room = await model.getRoomById(roomId);
+  const room = await model.getRoomById(roomId);
+  
+  if (!room) {
+    return (
+      <div className="w-full bg-white font-ubuntu p-8">
+        <div className="text-center py-10">
+          <p className="text-hotel-blue text-xl">Habitación no encontrada.</p>
+        </div>
+      </div>
+    );
+  }
  
 
   const otherRooms = [

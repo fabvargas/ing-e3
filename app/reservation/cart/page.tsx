@@ -17,6 +17,9 @@ export default async function Page({ searchParams }: { searchParams?: { [key: st
   const room = await model.getRoomById(roomId) /*Buscar la habitación por su id (getRoomById)*/
 
   /*Si no se encuentra la habitación RETORNA EL MENSAJE: "Habitación no encontrada."*/
+  if (!room) {
+    return <p className="text-center mt-10">Habitación no encontrada.</p>
+  }
   return (
     <div className="py-10">
       <CartSummary room={room} />

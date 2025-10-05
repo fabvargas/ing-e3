@@ -16,7 +16,7 @@ export default async function Page({ searchParams }: RoomsPageProps) {
     return <p className="text-center mt-10">Faltan parámetros de búsqueda</p>;
   }
 
- const cat = categoria === "Single" || categoria === "Premium" ? categoria : null;
+  const cat = categoria === "Suit Premium" || categoria === "Turista Single" || categoria === "Turista Vista al Mar" || categoria === "Turista Doble" ? categoria : null;
 
 const service = new RoomService();
 const availableRooms = await service.findAvailableRooms(
@@ -40,7 +40,7 @@ const availableRooms = await service.findAvailableRooms(
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 lg:p-10 bg-gradient-to-t from-black/70 to-transparent">
                 <h3 className="text-white text-xl md:text-2xl lg:text-[40px] font-medium mb-4 lg:mb-[25px]">
-                  {`${room.tipo} ${room.categoria}`}
+                  {room.categoria}
                 </h3>
                 <Link 
                 href={`/reservation/${room.id}?fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`}

@@ -19,8 +19,10 @@ export default function SearchForm() {
           <option value="" disabled>
             Categoría
           </option>
-          <option value="Single">Single</option>
-          <option value="Premium">Premium</option>
+          <option value="Suit Premium">Suit Premium</option>
+          <option value="Turista Single">Turista Single</option>
+          <option value="Turista Vista al Mar">Turista Vista al Mar</option>
+          <option value="Turista Doble">Turista Doble</option>
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-coral pointer-events-none" />
       </div>

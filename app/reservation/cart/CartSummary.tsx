@@ -108,9 +108,9 @@ export default function CartSummary({ room }: { room: Room }) {
       <h2 className="text-2xl font-medium mb-4">Resumen de la reserva</h2>
 
     <div className="flex gap-6 items-center mb-4">
-      <img alt={`${room.tipo} ${room.categoria}`} src="https://api.builder.io/api/v1/image/assets/TEMP/8ccd5129669f5284f823a95550463369243d2667?width=400" className="w-36 h-24 object-cover rounded" />
+      <img alt={`${room.categoria}`} src="https://api.builder.io/api/v1/image/assets/TEMP/8ccd5129669f5284f823a95550463369243d2667?width=400" className="w-36 h-24 object-cover rounded" />
         <div>
-          <p className="font-medium">{`${room.tipo} ${room.categoria}`}</p>
+          <p className="font-medium">{room.categoria}</p>
           <p className="text-sm text-gray-500">Habitación #{room.numero}</p>
         </div>
       </div>
@@ -181,7 +181,7 @@ export default function CartSummary({ room }: { room: Room }) {
                 <div className="mb-6">
                   <p className="text-lg mb-2">Tipo de habitación</p>
                   <div className="bg-gray-50 border border-gray-200 rounded p-3">
-                    <p className="font-medium">{room.tipo} {room.categoria}</p>
+                    <p className="font-medium">{room.categoria}</p>
                     <p className="text-sm text-gray-500">Habitación #{room.numero} • ${room.precioDiario} por noche</p>
                   </div>
                 </div>

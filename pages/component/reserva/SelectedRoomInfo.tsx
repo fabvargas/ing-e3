@@ -73,7 +73,7 @@ export default function SelectedRoomInfo({room}:{room:Room}) {
           {/* Room Details */}
           <div className="flex-1 pt-4 lg:pt-[23px]">
             <h1 className="text-hotel-blue text-2xl md:text-3xl lg:text-[40px] font-medium mb-3">
-              {`${room.tipo} ${room.categoria}`}
+              {room.categoria}
             </h1>
             <p className="text-hotel-blue text-xl md:text-2xl lg:text-[35px] font-medium mb-6 lg:mb-[38px]">
               ${room.precioDiario} por noche
