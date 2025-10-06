@@ -1,7 +1,9 @@
 "use client"
 import React from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Room } from '@/backend/models/room-model'
+import { Database } from '@/types/database'
+
+type Room = Database['public']['Tables']['habitaciones']['Row']
 
 // Calcula la diferencia en días entre dos fechas (se usa UTC a medianoche)
 // Devuelve 0 si la fecha de término es anterior o igual a la de inicio.
@@ -83,7 +85,9 @@ export default function CartSummary({ room }: { room: Room }) {
   }
 
   const noches = Math.max(1, daysBetween(inicio, termino))
-  const subtotal = noches * (room?.precioDiario ?? 0)
+  const subtotal = noches * (room?.precio_diario ?? 0)
+  const pagoReserva = Math.round(subtotal * 0.30) // 30% del total
+  const saldoPendiente = subtotal - pagoReserva
 
   // Valida el formulario de pago y muestra el modal de éxito si todo OK
   function handleRealizarReserva() {
@@ -108,9 +112,9 @@ export default function CartSummary({ room }: { room: Room }) {
       <h2 className="text-2xl font-medium mb-4">Resumen de la reserva</h2>
 
     <div className="flex gap-6 items-center mb-4">
-      <img alt={`${room.tipo} ${room.categoria}`} src="https://api.builder.io/api/v1/image/assets/TEMP/8ccd5129669f5284f823a95550463369243d2667?width=400" className="w-36 h-24 object-cover rounded" />
+      <img alt={`${room.categoria}`} src="https://api.builder.io/api/v1/image/assets/TEMP/8ccd5129669f5284f823a95550463369243d2667?width=400" className="w-36 h-24 object-cover rounded" />
         <div>
-          <p className="font-medium">{`${room.tipo} ${room.categoria}`}</p>
+          <p className="font-medium">{room.categoria}</p>
           <p className="text-sm text-gray-500">Habitación #{room.numero}</p>
         </div>
       </div>
@@ -128,12 +132,26 @@ export default function CartSummary({ room }: { room: Room }) {
 
       <div className="mb-4">
         <p>Noches: <strong>{noches}</strong></p>
-        <p>Precio por noche: <strong>${room.precioDiario}</strong></p>
+        <p>Precio por noche: <strong>${room.precio_diario}</strong></p>
       </div>
 
-      <div className="flex justify-between items-center border-t pt-4">
-        <p className="font-medium">Total</p>
-        <p className="text-xl font-bold">${subtotal}</p>
+      <div className="border-t pt-4 space-y-2">
+        <div className="flex justify-between">
+          <p>Subtotal ({noches} noches):</p>
+          <p>${subtotal.toLocaleString()}</p>
+        </div>
+        <div className="flex justify-between text-primary font-medium">
+          <p>Pago de reserva (30%):</p>
+          <p>${pagoReserva.toLocaleString()}</p>
+        </div>
+        <div className="flex justify-between text-gray-500 text-sm">
+          <p>Saldo pendiente (70%):</p>
+          <p>${saldoPendiente.toLocaleString()}</p>
+        </div>
+        <div className="flex justify-between items-center border-t pt-2">
+          <p className="font-medium">Total a pagar ahora</p>
+          <p className="text-xl font-bold text-primary">${pagoReserva.toLocaleString()}</p>
+        </div>
       </div>
 
       <div className="flex gap-4 mt-6">
@@ -173,16 +191,38 @@ export default function CartSummary({ room }: { room: Room }) {
                     <div className="bg-gray-100 rounded mt-2 py-2">{Number(searchParams?.get('huespedes')) || 1}</div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Total</p>
-                    <div className="bg-gray-100 rounded mt-2 py-2">${subtotal}</div>
+                    <p className="text-sm text-gray-500">Pago de reserva</p>
+                    <div className="bg-gray-100 rounded mt-2 py-2">${pagoReserva.toLocaleString()}</div>
                   </div>
                 </div>
 
                 <div className="mb-6">
                   <p className="text-lg mb-2">Tipo de habitación</p>
                   <div className="bg-gray-50 border border-gray-200 rounded p-3">
-                    <p className="font-medium">{room.tipo} {room.categoria}</p>
-                    <p className="text-sm text-gray-500">Habitación #{room.numero} • ${room.precioDiario} por noche</p>
+                    <p className="font-medium">{room.categoria}</p>
+                    <p className="text-sm text-gray-500">Habitación #{room.numero} • ${room.precio_diario} por noche</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <p className="text-lg mb-2">Desglose de costos</p>
+                  <div className="bg-gray-50 border border-gray-200 rounded p-3 space-y-2">
+                    <div className="flex justify-between">
+                      <span>Subtotal ({noches} noches):</span>
+                      <span>${subtotal.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-primary font-medium">
+                      <span>Pago de reserva (30%):</span>
+                      <span>${pagoReserva.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-500 text-sm">
+                      <span>Saldo pendiente (70%):</span>
+                      <span>${saldoPendiente.toLocaleString()}</span>
+                    </div>
+                    <div className="border-t pt-2 flex justify-between font-bold text-lg">
+                      <span>Total a pagar ahora:</span>
+                      <span className="text-primary">${pagoReserva.toLocaleString()}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -266,7 +306,7 @@ export default function CartSummary({ room }: { room: Room }) {
                     <input value={cvc} onChange={(e) => setCvc(e.target.value)} type="text" inputMode="numeric" name="cc-csc" placeholder="CVC" className="w-full bg-gray-100 h-10 rounded mb-1 px-3 text-center" />
                     {paymentErrors.cvc && <p className="text-sm text-red-500 mb-2">{paymentErrors.cvc}</p>}
 
-                    <button className="px-6 py-3 bg-red-500 text-white font-bold rounded">Pago pendiente</button>
+                    <button className="px-6 py-3 bg-red-500 text-white font-bold rounded">Pagar Reserva (30%)</button>
                   </div>
 
                   {/* Columna derecha: logo de PayPal y acciones */}
@@ -291,8 +331,10 @@ export default function CartSummary({ room }: { room: Room }) {
               <div className="fixed inset-0 z-60 flex items-center justify-center">
                 <div className="absolute inset-0 bg-black/40" onClick={() => setShowSuccess(false)} />
                 <div className="relative bg-white w-[760px] max-w-[95%] rounded-lg shadow-xl p-8 border-4 border-secondary z-10">
-                  <h2 className="text-4xl font-bold text-center mb-6">¡Pago realizado de forma exitosa!</h2>
-                  <p className="mb-6">Fue enviado un correo electrónico al email xxxxx@gmail.com con el comprobante de la reserva y el QR que será solicitado al momento de ingresar a las instalaciones.</p>
+                  <h2 className="text-4xl font-bold text-center mb-6">¡Reserva confirmada exitosamente!</h2>
+                  <p className="mb-4">Se ha procesado el pago de reserva del 30% (${pagoReserva.toLocaleString()}) de forma exitosa.</p>
+                  <p className="mb-4">El saldo pendiente de ${saldoPendiente.toLocaleString()} (70%) deberá ser pagado al momento del check-in.</p>
+                  <p className="mb-6">Fue enviado un correo electrónico con el comprobante de la reserva y el QR que será solicitado al momento de ingresar a las instalaciones.</p>
 
                   <div className="flex items-center gap-6">
                     <div>

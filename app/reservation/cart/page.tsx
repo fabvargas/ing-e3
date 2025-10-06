@@ -1,4 +1,4 @@
-import { JsonRoomModel } from '@/backend/models/room-model'
+import { SupabaseRoomService } from '@/backend/services/supabase-room-service'
 import CartSummary from './CartSummary'
 
   /*
@@ -13,10 +13,13 @@ export default async function Page({ searchParams }: { searchParams?: { [key: st
 
 
   const roomId = parseInt(roomIdParam) /*Convertir el id (texto - roomIdParam) de la habitación a número (parseInt)*/
-  const model = new JsonRoomModel() /*Crear una instancia del modelo de habitaciones (JsonRoomModel)*/
-  const room = await model.getRoomById(roomId) /*Buscar la habitación por su id (getRoomById)*/
+  const roomService = new SupabaseRoomService() /*Crear una instancia del servicio de habitaciones (SupabaseRoomService)*/
+  const room = await roomService.getRoomById(roomId) /*Buscar la habitación por su id (getRoomById)*/
 
   /*Si no se encuentra la habitación RETORNA EL MENSAJE: "Habitación no encontrada."*/
+  if (!room) {
+    return <p className="text-center mt-10">Habitación no encontrada.</p>
+  }
   return (
     <div className="py-10">
       <CartSummary room={room} />

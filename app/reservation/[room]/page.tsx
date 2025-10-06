@@ -1,4 +1,4 @@
-import { JsonRoomModel } from '@/backend/models/room-model';
+import { SupabaseRoomService } from '@/backend/services/supabase-room-service';
 import SelectedRoomInfo from '@/pages/component/reserva/SelectedRoomInfo';
 
 
@@ -15,10 +15,19 @@ export default async function Page({ params }: { params: {room: string} }) {
 
   console.log(roomId)
 
-  const model = new JsonRoomModel();
+  const roomService = new SupabaseRoomService();
 
-
-   const room = await model.getRoomById(roomId);
+  const room = await roomService.getRoomById(roomId);
+  
+  if (!room) {
+    return (
+      <div className="w-full bg-white font-ubuntu p-8">
+        <div className="text-center py-10">
+          <p className="text-hotel-blue text-xl">Habitación no encontrada.</p>
+        </div>
+      </div>
+    );
+  }
  
 
   const otherRooms = [
