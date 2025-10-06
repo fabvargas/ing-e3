@@ -5,9 +5,9 @@ import Link from 'next/link'
 
 export default function FooterLogin({from}:{from:string}) {
 
-  const spanFooter = from == "register" ? "Ya tienes cuenta?" : "No tienes cuenta"
+  const spanFooter = from == "register" ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"
 
-  const linkFooter = from == "register" ? "registrate aquí" : "ingresa aquí"
+  const linkFooter = from == "register" ? "Ingresa aquí" : "Regístrate aquí"
 
   const hrefFooter = from == "register" ? "/" : "/register"
 

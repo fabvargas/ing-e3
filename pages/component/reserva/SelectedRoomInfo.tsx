@@ -3,8 +3,10 @@
 // y permite navegar a la pantalla de resumen/carrito.
 import React, { useState } from 'react'
 import { ChevronLeft, ChevronRight, Wifi, Tv, Star } from "lucide-react";
-import { Room } from '@/backend/models/room-model';
+import { Database } from '@/types/database';
 import { useRouter, useSearchParams } from 'next/navigation'
+
+type Room = Database['public']['Tables']['habitaciones']['Row']
 
 export default function SelectedRoomInfo({room}:{room:Room}) {
 
@@ -76,7 +78,7 @@ export default function SelectedRoomInfo({room}:{room:Room}) {
               {room.categoria}
             </h1>
             <p className="text-hotel-blue text-xl md:text-2xl lg:text-[35px] font-medium mb-6 lg:mb-[38px]">
-              ${room.precioDiario} por noche
+              ${room.precio_diario} por noche
             </p>
             <p className="text-hotel-blue text-lg md:text-xl lg:text-[29px] font-normal leading-[1.4] mb-8 lg:mb-[53px]">
              {room.descripcion}

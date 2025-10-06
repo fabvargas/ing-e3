@@ -1,9 +1,8 @@
-import { JsonUserModel, User} from "../models/user-model";
-
+import { SupabaseUserService } from "./supabase-user-service";
 
 export class UserService{
 
-    private repository= new JsonUserModel()
+    private repository = new SupabaseUserService()
 
     async findUserByEmail (email:string){
         
@@ -26,15 +25,14 @@ export class UserService{
       throw new Error("El correo ya está registrado.");
     }
 
-    const newUser: User = {
-      id: 0,
-      name: data.name,
+    const newUserData = {
+      nombre: data.name,
       email: data.email,
       password: data.password,
     };
 
     
-    const createdUser = await this.repository.addUser(newUser);
+    const createdUser = await this.repository.createUser(newUserData);
 
     console.log("Usuario registrado:", createdUser);
 

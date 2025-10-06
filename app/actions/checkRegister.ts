@@ -51,6 +51,11 @@ export async function checkRegister(
       }
     }
 
+    // Mostrar mensaje de éxito antes de redirigir
+    return {
+      error: false,
+      message: "¡Usuario registrado exitosamente! Redirigiendo...",
+    }
    
   } catch (err) {
     return {
@@ -58,7 +63,4 @@ export async function checkRegister(
       message: (err as Error).message || "Error al registrar el usuario.",
     }
   }
-
-
-    redirect("/")
 }

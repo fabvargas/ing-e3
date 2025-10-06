@@ -1,24 +1,23 @@
-import { JsonRoomModel, Room } from "../models/room-model";
-import { JsonReservationModel } from "../models/reservation-model";
+import { SupabaseRoomService } from "./supabase-room-service";
+import { SupabaseReservationService } from "./supabase-reservation-service";
 import { soloFechaChile } from "../utils/fechaChiile";
 
 export class RoomService {
-  private roomModel: JsonRoomModel;
-  private reservationModel: JsonReservationModel;
+  private roomModel: SupabaseRoomService;
+  private reservationModel: SupabaseReservationService;
 
   constructor() {
-    this.roomModel = new JsonRoomModel();
-    this.reservationModel = new JsonReservationModel();
+    this.roomModel = new SupabaseRoomService();
+    this.reservationModel = new SupabaseReservationService();
   }
 
   
   async findAvailableRooms(
-    categoria: "Suit Premium" | "Turista Single" | "Turista Vista al Mar" | "Turista Doble" | null,
+    tipoCama: "Individual" | "Doble" | null,
     fechaInicio: Date,
     fechaTermino: Date
-  ): Promise<Room[]> {
+  ) {
   
-
 
 const hoyFecha = soloFechaChile(new Date());
 const inicioFecha = soloFechaChile(fechaInicio);
@@ -30,31 +29,45 @@ if (inicioFecha < hoyFecha || terminoFecha < inicioFecha) {
 }
  console.log(inicioFecha,terminoFecha,hoyFecha)
 
-    const rooms = await this.roomModel.getAllRooms();
-    const reservations = await this.reservationModel.getAllReservations();
+    // Usar el método de Supabase que ya maneja la lógica de disponibilidad
+    const availableRooms = await this.roomModel.getAvailableRooms(
+      inicioFecha.toISOString().split('T')[0],
+      terminoFecha.toISOString().split('T')[0]
+    );
 
-    // 1. filtrar por categoria
-    const filteredRooms = categoria
-      ? rooms.filter((room) => room.categoria === categoria)
-      : rooms;
+    // Si es Individual, devolver solo Turista Single
+    if (tipoCama === "Individual") {
+      const filteredRooms = availableRooms.filter((room) => room.tipo_cama === "Individual");
+      return filteredRooms.filter((room) => room.categoria === "Turista Single");
+    }
 
-    // 2. conflicto de fechas
-    const availableRooms = filteredRooms.filter((room) => {
-      const reservasDeRoom = reservations.filter(
-        (res) => res.roomId === room.id
-      );
+    // Si es Doble, devolver máximo 1 habitación por categoría de tipo doble
+    if (tipoCama === "Doble") {
+      const filteredRooms = availableRooms.filter((room) => room.tipo_cama === "Doble");
+      const categories = ["Turista Doble", "Turista Vista al Mar", "Suit Premium"];
+      const result: typeof filteredRooms = [];
+      
+      for (const category of categories) {
+        const roomInCategory = filteredRooms.find((room) => room.categoria === category);
+        if (roomInCategory) {
+          result.push(roomInCategory);
+        }
+      }
+      
+      return result;
+    }
 
+    // Si no se especifica tipo de cama, mostrar máximo 1 habitación por cada categoría disponible
+    const allCategories = ["Turista Single", "Turista Doble", "Turista Vista al Mar", "Suit Premium"];
+    const result: typeof availableRooms = [];
     
-     const tieneConflicto = reservasDeRoom.some((res) => {
-  const resInicio = soloFechaChile(new Date(res.fechaInicio));
-  const resTermino = soloFechaChile(new Date(res.fechaTermino));
-  return inicioFecha <= resTermino && terminoFecha >= resInicio;
-});
-
-
-      return !tieneConflicto;
-    });
-   
-    return availableRooms;
+    for (const category of allCategories) {
+      const roomInCategory = availableRooms.find((room) => room.categoria === category);
+      if (roomInCategory) {
+        result.push(roomInCategory);
+      }
+    }
+    
+    return result;
   }
 }

@@ -9,7 +9,13 @@ export class SupabaseReservationService {
   async createReservation(reservationData: Omit<ReservationInsert, 'id' | 'created_at'>): Promise<Reservation> {
     const { data, error } = await supabase
       .from('reservas')
-      .insert(reservationData)
+      .insert({
+        room_id: reservationData.habitacion_id,
+        usuario_id: reservationData.usuario_id,
+        fecha_inicio: reservationData.fecha_inicio,
+        fecha_termino: reservationData.fecha_termino,
+        estado: reservationData.estado || 'confirmada'
+      })
       .select()
       .single()
 
@@ -41,7 +47,7 @@ export class SupabaseReservationService {
       .from('reservas')
       .select('*')
       .eq('usuario_id', userId)
-      .order('created_at', { ascending: false })
+      .order('fecha_inicio', { ascending: false })
 
     if (error) {
       console.error('Error fetching user reservations:', error)
@@ -55,8 +61,8 @@ export class SupabaseReservationService {
     const { data, error } = await supabase
       .from('reservas')
       .select('*')
-      .eq('habitacion_id', roomId)
-      .order('created_at', { ascending: false })
+      .eq('room_id', roomId)
+      .order('fecha_inicio', { ascending: false })
 
     if (error) {
       console.error('Error fetching room reservations:', error)
@@ -112,7 +118,7 @@ export class SupabaseReservationService {
     const { data, error } = await supabase
       .from('reservas')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('fecha_inicio', { ascending: false })
 
     if (error) {
       console.error('Error fetching all reservations:', error)
@@ -141,8 +147,7 @@ export class SupabaseReservationService {
     const { data, error } = await supabase
       .from('reservas')
       .select('id')
-      .eq('habitacion_id', roomId)
-      .eq('estado', 'confirmada')
+      .eq('room_id', roomId)
       .or(`and(fecha_inicio.lte.${fechaTermino},fecha_termino.gte.${fechaInicio})`)
       .limit(1)
 

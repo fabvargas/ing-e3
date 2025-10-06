@@ -37,23 +37,21 @@ export class SupabaseRoomService {
     let query = supabase
       .from('habitaciones')
       .select('*')
-      .eq('disponible', true)
       .order('id')
 
     // Si se proporcionan fechas, filtrar habitaciones disponibles en ese período
     if (fechaInicio && fechaTermino) {
       const { data: habitacionesOcupadas, error: ocupadasError } = await supabase
         .from('reservas')
-        .select('habitacion_id')
+        .select('room_id')
         .or(`and(fecha_inicio.lte.${fechaTermino},fecha_termino.gte.${fechaInicio})`)
-        .eq('estado', 'confirmada')
 
       if (ocupadasError) {
         console.error('Error checking occupied rooms:', ocupadasError)
         throw new Error('Error al verificar disponibilidad')
       }
 
-      const habitacionesOcupadasIds = habitacionesOcupadas?.map(r => r.habitacion_id) || []
+      const habitacionesOcupadasIds = habitacionesOcupadas?.map(r => r.room_id) || []
       
       if (habitacionesOcupadasIds.length > 0) {
         query = query.not('id', 'in', `(${habitacionesOcupadasIds.join(',')})`)

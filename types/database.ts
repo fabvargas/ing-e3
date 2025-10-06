@@ -28,6 +28,7 @@ export interface Database {
           categoria: 'Suit Premium' | 'Turista Single' | 'Turista Vista al Mar' | 'Turista Doble'
           piso: number
           precio_diario: number
+          tipo_cama: 'Individual' | 'Doble'
           descripcion: string
         }
         Insert: {
@@ -36,6 +37,7 @@ export interface Database {
           categoria: 'Suit Premium' | 'Turista Single' | 'Turista Vista al Mar' | 'Turista Doble'
           piso: number
           precio_diario: number
+          tipo_cama: 'Individual' | 'Doble'
           descripcion: string
         }
         Update: {
@@ -44,6 +46,7 @@ export interface Database {
           categoria?: 'Suit Premium' | 'Turista Single' | 'Turista Vista al Mar' | 'Turista Doble'
           piso?: number
           precio_diario?: number
+          tipo_cama?: 'Individual' | 'Doble'
           descripcion?: string
         }
       }
@@ -51,20 +54,29 @@ export interface Database {
         Row: {
           id: number
           room_id: number
+          usuario_id?: number
           fecha_inicio: string
           fecha_termino: string
+          estado?: 'pendiente' | 'confirmada' | 'cancelada' | 'completada'
+          created_at?: string
         }
         Insert: {
           id?: number
           room_id: number
+          usuario_id?: number
           fecha_inicio: string
           fecha_termino: string
+          estado?: 'pendiente' | 'confirmada' | 'cancelada' | 'completada'
+          created_at?: string
         }
         Update: {
           id?: number
           room_id?: number
+          usuario_id?: number
           fecha_inicio?: string
           fecha_termino?: string
+          estado?: 'pendiente' | 'confirmada' | 'cancelada' | 'completada'
+          created_at?: string
         }
       }
     }

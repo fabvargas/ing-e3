@@ -1,30 +1,48 @@
 import { RoomService } from "@/backend/services/room-service";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 interface RoomsPageProps {
   searchParams: {
-    categoria?: string;
+    tipoCama?: string;
     fechaInicio?: string;
     fechaTermino?: string;
   };
 }
 
 export default async function Page({ searchParams }: RoomsPageProps) {
-  const { categoria, fechaInicio, fechaTermino } = searchParams;
+  const { tipoCama, fechaInicio, fechaTermino } = searchParams;
 
   if (!fechaInicio || !fechaTermino) {
     return <p className="text-center mt-10">Faltan parámetros de búsqueda</p>;
   }
 
-  const cat = categoria === "Suit Premium" || categoria === "Turista Single" || categoria === "Turista Vista al Mar" || categoria === "Turista Doble" ? categoria : null;
+  const tipo = tipoCama === "Individual" || tipoCama === "Doble" ? tipoCama : null;
 
-const service = new RoomService();
-const availableRooms = await service.findAvailableRooms(
-  cat,
-  new Date(fechaInicio),
-  new Date(fechaTermino)
-);
+  const service = new RoomService();
+  const availableRooms = await service.findAvailableRooms(
+    tipo,
+    new Date(fechaInicio),
+    new Date(fechaTermino)
+  );
 
+  // Si es Individual, redirigir directamente a la primera habitación Turista Single disponible
+  if (tipo === "Individual" && availableRooms.length > 0) {
+    const firstRoom = availableRooms[0];
+    redirect(`/reservation/${firstRoom.id}?fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`);
+  }
+
+  // Si es Individual pero no hay habitaciones disponibles
+  if (tipo === "Individual" && availableRooms.length === 0) {
+    return (
+      <div className="my-10 w-full max-w-[1400px] mx-auto text-center">
+        <h2 className="text-2xl font-medium mb-4">No hay habitaciones individuales disponibles</h2>
+        <p className="text-gray-500">No se encontraron habitaciones Turista Single disponibles para las fechas seleccionadas.</p>
+      </div>
+    );
+  }
+
+  // Para tipo Doble o sin tipo específico, mostrar la grilla normal
   return (
     <div className="my-10 w-full max-w-[1400px] mx-auto">
       {availableRooms.length > 0 ? (

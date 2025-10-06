@@ -1,9 +1,8 @@
 "use client"
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { checkRegister } from "@/app/actions/checkRegister"
-
-
+import { useRouter } from "next/navigation";
 
 import React from 'react'
 
@@ -19,8 +18,19 @@ const initialState : ResponseAction<string> = {
 
 
 export default function FormRegister() {
+  const router = useRouter();
+  const [state, formAction] = useActionState(checkRegister, initialState);
 
-const [state, formAction] = useActionState(checkRegister, initialState);
+  // Redirigir después del éxito
+  useEffect(() => {
+    if (!state.error && state.message && state.message.includes("exitosamente")) {
+      const timer = setTimeout(() => {
+        router.push("/");
+      }, 2000); // Redirigir después de 2 segundos
+      
+      return () => clearTimeout(timer);
+    }
+  }, [state, router]);
   return (
     <form className="flex flex-col gap-3 w-full py-0 p-10" action={formAction}>
           {/* Email */}
@@ -75,9 +85,10 @@ const [state, formAction] = useActionState(checkRegister, initialState);
               type="submit"
               className="bg-primary text-white font-ubuntu text-md font-bold rounded-sm hover:bg-[#D76540]/90 transition-colors py-4 w-full"
             >
-              Ingresar
+              Registrarse
             </button>
-            <p className="text-destructive">{state.error && state.message}</p>
+            {state.error && <p className="text-destructive">{state.message}</p>}
+            {!state.error && state.message && <p className="text-green-500">{state.message}</p>}
           </div>
         </form>
   )
