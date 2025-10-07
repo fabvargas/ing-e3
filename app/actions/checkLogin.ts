@@ -28,6 +28,11 @@ export async function checkLogin(
 
   const userFound = await userService.findUserByEmail(email)
 
+  if(userFound?.email != email || userFound?.password != password) return {
+      error: true,
+      message: "Credenciales incorrectas.",
+    }
+
   if (!userFound) {
     return {
       error: true,
