@@ -13,6 +13,8 @@ interface RoomsPageProps {
 export default async function Page({ searchParams }: RoomsPageProps) {
   const { tipoCama, fechaInicio, fechaTermino } = searchParams;
 
+  console.log(tipoCama, "desde page reservation")
+
   if (!fechaInicio || !fechaTermino) {
     return <p className="text-center mt-10">Faltan parámetros de búsqueda</p>;
   }
@@ -26,21 +28,21 @@ export default async function Page({ searchParams }: RoomsPageProps) {
     new Date(fechaTermino)
   );
 
-  // Si es Individual, redirigir directamente a la primera habitación Turista Single disponible
-  if (tipo === "Individual" && availableRooms.length > 0) {
-    const firstRoom = availableRooms[0];
-    redirect(`/reservation/${firstRoom.id}?fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`);
-  }
+  // // Si es Individual, redirigir directamente a la primera habitación Turista Single disponible
+  // if (tipo === "Individual" && availableRooms.length > 0) {
+  //   const firstRoom = availableRooms[0];
+  //   redirect(`/reservation/${firstRoom.id}?fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`);
+  // }
 
-  // Si es Individual pero no hay habitaciones disponibles
-  if (tipo === "Individual" && availableRooms.length === 0) {
-    return (
-      <div className="my-10 w-full max-w-[1400px] mx-auto text-center">
-        <h2 className="text-2xl font-medium mb-4">No hay habitaciones individuales disponibles</h2>
-        <p className="text-gray-500">No se encontraron habitaciones Turista Single disponibles para las fechas seleccionadas.</p>
-      </div>
-    );
-  }
+  // // Si es Individual pero no hay habitaciones disponibles
+  // if (tipo === "Individual" && availableRooms.length === 0) {
+  //   return (
+  //     <div className="my-10 w-full max-w-[1400px] mx-auto text-center">
+  //       <h2 className="text-2xl font-medium mb-4">No hay habitaciones individuales disponibles</h2>
+  //       <p className="text-gray-500">No se encontraron habitaciones Turista Single disponibles para las fechas seleccionadas.</p>
+  //     </div>
+  //   );
+  // }
 
   // Para tipo Doble o sin tipo específico, mostrar la grilla normal
   return (

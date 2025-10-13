@@ -9,18 +9,16 @@ export default function SearchForm() {
       action={filterRoomsAction}
       className="w-full bg-secondary flex flex-wrap py-6 justify-center gap-7"
     >
-      {/* Category Select */}
+      {/* Tipo de Cama Select */}
       <div className="relative">
         <select
-          name="categoria"
+          name="tipoCama"
           className="bg-white border border-gray-300 rounded-xl px-4 py-4 font-ubuntu text-xl text-gray-700 cursor-pointer appearance-none pr-10"
           defaultValue=""
         >
-          <option value="" disabled>
-            Categoría
-          </option>
-          <option value="Single">Single</option>
-          <option value="Premium">Premium</option>
+          <option value="">Tipo de Cama (Opcional)</option>
+          <option value="Individual">Individual</option>
+          <option value="Doble">Doble</option>
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-coral pointer-events-none" />
       </div>

@@ -7,6 +7,8 @@ export async function filterRoomsAction(formData: FormData) {
   const fechaInicio = formData.get("fechaInicio") as string;
   const fechaTermino = formData.get("fechaTermino") as string;
 
+  console.log(tipoCama, "desde action")
+
   // Redirige con parámetros en la URL
   redirect(
     `/reservation?tipoCama=${tipoCama}&fechaInicio=${fechaInicio}&fechaTermino=${fechaTermino}`
